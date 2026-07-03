@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #FFF0F5;
+  --color-surface: #FFFFFF;
+  --color-primary-pink: #FFB6C1;
+  --color-accent: #FF69B4;
+  --color-text-main: #2D2D2D;
+  --color-secondary-text: #6B7280;
+
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text-main font-body antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-medium tracking-tight;
+  }
+}
