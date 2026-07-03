@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import loveVideo from '../assets/emojis-love.mp4';
+import mainImage from '../assets/image.png';
 import { Palette, PencilLine, Heart, Sparkles, Star } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -76,19 +76,16 @@ const RoomOne = () => {
       </div>
 
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
-        <div className="flex-1 w-full aspect-[4/5] border border-primary-pink/30 p-4 sketch-box bg-white/50 backdrop-blur-sm shadow-[0_0_30px_rgba(248,187,217,0.3)] rounded-lg relative">
+        <div className="flex-1 w-full border border-primary-pink/30 p-4 sketch-box bg-white/50 backdrop-blur-sm shadow-[0_0_30px_rgba(248,187,217,0.3)] rounded-lg relative">
           <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-accent/60 rounded-tl-lg"></div>
           <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-accent/60 rounded-br-lg"></div>
           
-          <div className="w-full h-full border border-primary-pink/30 rounded-md flex items-center justify-center bg-background/80 relative overflow-hidden group">
-            <div className="relative w-full h-full flex items-center justify-center">
-              <video 
-                src={loveVideo} 
-                autoPlay 
-                loop 
-                muted 
-                playsInline
-                className="w-48 h-48 md:w-64 md:h-64 object-contain scale-90 group-hover:scale-105 transition-transform duration-700"
+          <div className="w-full border border-primary-pink/30 rounded-md flex items-center justify-center bg-background/80 relative overflow-hidden group p-2">
+            <div className="relative w-full flex items-center justify-center">
+              <img 
+                src={mainImage} 
+                alt="The First Sketch"
+                className="w-full h-auto object-contain rounded-sm group-hover:scale-105 transition-transform duration-700"
               />
             </div>
           </div>

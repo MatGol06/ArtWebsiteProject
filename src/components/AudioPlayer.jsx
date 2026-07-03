@@ -1,18 +1,71 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import song3 from '../assets/song3.mp3';
 
 const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+  
+  // Keep track of manual pauses so it doesn't accidentally resume if the user wanted it silent
+  const isForcedPause = useRef(false);
+
+  const START_TIME_IN_SECONDS = 18; 
 
   const togglePlay = () => {
     if (isPlaying) {
       audioRef.current.pause();
+      isForcedPause.current = true;
     } else {
       audioRef.current.play().catch(e => console.log('Audio play error:', e));
+      isForcedPause.current = false;
     }
     setIsPlaying(!isPlaying);
   };
+
+  useEffect(() => {
+    // Attempt autoplay on first user interaction (browser restriction workaround)
+    const handleFirstInteraction = () => {
+      if (!isPlaying && !isForcedPause.current && audioRef.current) {
+        audioRef.current.play()
+          .then(() => setIsPlaying(true))
+          .catch(e => console.log('Autoplay prevented by browser:', e));
+      }
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+    };
+
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('scroll', handleFirstInteraction);
+
+    // Custom events triggered by RoomTwo
+    const handlePauseMusic = () => {
+       if (audioRef.current && isPlaying) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+       }
+    };
+
+    const handleResumeMusic = () => {
+       if (audioRef.current && !isForcedPause.current) {
+          audioRef.current.play()
+            .then(() => setIsPlaying(true))
+            .catch(e => console.log('Resume error:', e));
+       }
+    };
+
+    window.addEventListener('pauseBackgroundMusic', handlePauseMusic);
+    window.addEventListener('resumeBackgroundMusic', handleResumeMusic);
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
+      window.removeEventListener('pauseBackgroundMusic', handlePauseMusic);
+      window.removeEventListener('resumeBackgroundMusic', handleResumeMusic);
+    };
+  }, [isPlaying]);
 
   return (
     <div className="fixed bottom-6 right-6 z-50 mix-blend-difference text-white">
@@ -22,9 +75,12 @@ const AudioPlayer = () => {
       */}
       <audio 
         ref={audioRef} 
-        src="https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3?filename=ambient-piano-amp-strings-10711.mp3" 
+        src={song3} 
         loop 
         preload="auto"
+        onLoadedMetadata={(e) => {
+          e.target.currentTime = 18;
+        }}
       />
       <button 
         onClick={togglePlay} 
